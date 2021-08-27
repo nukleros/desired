@@ -14,3 +14,13 @@ func EqualMapStringInterface(desired, actual map[string]interface{}) (bool, erro
 
 	return true, nil
 }
+
+func sliceInterfaceToMapStringInterface(in []interface{}) []map[string]interface{} {
+	out := make([]map[string]interface{}, len(in))
+
+	for i, mapStringInterfaceValue := range in {
+		out[i] = mapStringInterfaceValue.(map[string]interface{})
+	}
+
+	return out
+}

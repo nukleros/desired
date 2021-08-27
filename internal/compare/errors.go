@@ -1,6 +1,8 @@
 package compare
 
 const (
+	ErrorMismatchedTypes = "types are mismatched"
+
 	ErrorNilString     = "unable to compare nil string"
 	ErrorConvertString = "unable to convert to string"
 
