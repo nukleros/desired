@@ -1,16 +1,11 @@
 package compare
 
 import (
-	"errors"
 	"reflect"
 	"sort"
 )
 
 func EqualSliceInt(desired, actual []interface{}) (bool, error) {
-	if desired == nil || actual == nil {
-		return false, errors.New(ErrorNilSliceInt)
-	}
-
 	if len(desired) != len(actual) {
 		return false, nil
 	}
