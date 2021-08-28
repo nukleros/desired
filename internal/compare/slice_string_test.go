@@ -40,6 +40,13 @@ func Test_validateSliceStringComparison(t *testing.T) {
 			expectError:        false,
 			expectEqual:        false,
 		},
+		{
+			name:               "ensure nil comparison fails",
+			desiredSliceString: []interface{}{"one", "two", "three", "four"},
+			actualSliceString:  nil,
+			expectError:        true,
+			expectEqual:        false,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

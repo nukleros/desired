@@ -33,6 +33,27 @@ func Test_validateStringComparison(t *testing.T) {
 			expectError:   false,
 			expectEqual:   false,
 		},
+		{
+			name:          "ensure nil comparison fails",
+			desiredString: "this is a test",
+			actualString:  nil,
+			expectError:   true,
+			expectEqual:   false,
+		},
+		{
+			name:          "ensure desired type mismatch fails",
+			desiredString: 1,
+			actualString:  "string",
+			expectError:   true,
+			expectEqual:   false,
+		},
+		{
+			name:          "ensure actual type mismatch fails",
+			desiredString: "string",
+			actualString:  1,
+			expectError:   true,
+			expectEqual:   false,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

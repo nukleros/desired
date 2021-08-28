@@ -3,7 +3,7 @@ package desired
 import (
 	"testing"
 
-	testdata "github.com/scottd018/test"
+	testdata "github.com/scottd018/desired/test"
 )
 
 func Test_equalDeepMapComparison(t *testing.T) {
@@ -31,9 +31,9 @@ func Test_equalDeepMapComparison(t *testing.T) {
 		{
 			name:        "ensure inequal objects return as not equal",
 			desiredData: testdata.EqualDeploymentDesired(),
-			actualData:  testdata.EqualDeploymentActual(),
+			actualData:  testdata.InequalDeployment(),
 			expectError: false,
-			expectEqual: true,
+			expectEqual: false,
 		},
 	}
 	for _, tt := range tests {

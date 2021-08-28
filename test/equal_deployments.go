@@ -145,3 +145,7 @@ func InequalDeployment() map[string]interface{} {
 		},
 	}
 }
+
+func NilDeployment() map[string]interface{} {
+	return nil
+}
