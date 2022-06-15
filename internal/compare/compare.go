@@ -52,7 +52,7 @@ func Compare(desiredValue, actualValue interface{}) (bool, error) {
 	case []interface{}:
 		actualAsType := actualValue.([]interface{})
 
-		// return equality if desired has no values but actual does as the
+		// return equality if desired has no values as the
 		// desired is not explicitly controlling these fields
 		if len(desiredAsType) == 0 {
 			return true, nil
