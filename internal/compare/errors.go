@@ -1,14 +1,11 @@
 package compare
 
-const (
-	ErrorMismatchedTypes = "types are mismatched"
+import "errors"
 
-	ErrorNilString     = "unable to compare nil string"
-	ErrorConvertString = "unable to convert to string"
+var (
+	ErrMismatchedTypes = errors.New("types are mismatched")
+	ErrInvalidListType = errors.New("error invalid slice or array type")
 
-	ErrorNilInt     = "unable to compare nil string"
-	ErrorConvertInt = "unable to convert to integer"
-
-	ErrorNilSliceInt    = "unable to compare nil slice of integers"
-	ErrorNilSliceString = "unable to compare nil slice of strings"
+	ErrConvertDesired = errors.New("error converting desired")
+	ErrConvertActual  = errors.New("error converting actual")
 )
