@@ -3,7 +3,7 @@ package compare
 import (
 	"reflect"
 
-	"github.com/scottd018/desired/internal/convert"
+	"github.com/nukleros/desired/internal/convert"
 )
 
 // EqualMap ensures any map type is equal.

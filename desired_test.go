@@ -3,7 +3,7 @@ package desired
 import (
 	"testing"
 
-	testdata "github.com/scottd018/desired/test"
+	testdata "github.com/nukleros/desired/test"
 )
 
 func Test_equalDeepMapComparison(t *testing.T) {

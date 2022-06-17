@@ -5,7 +5,7 @@ import (
 	"reflect"
 	"sort"
 
-	"github.com/scottd018/desired/internal/convert"
+	"github.com/nukleros/desired/internal/convert"
 )
 
 // EqualList takes in a list of any type and returns the result of the comparison.

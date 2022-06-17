@@ -1,3 +1,3 @@
-module github.com/scottd018/desired
+module github.com/nukleros/desired
 
-go 1.16
+go 1.18
