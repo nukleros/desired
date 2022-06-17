@@ -38,15 +38,15 @@ func Test_equalDeepMapComparison(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			equal, err := Equal(tt.desiredData, tt.actualData)
+			equal, err := Desired(tt.desiredData, tt.actualData)
 			hasError := err != nil
 			if hasError != tt.expectError {
-				t.Errorf("Equal(%s, %s); hasError %s; expectError %v",
+				t.Errorf("Desired(%s, %s); hasError %s; expectError %v",
 					tt.desiredData, tt.actualData, err, tt.expectError)
 			}
 
 			if equal != tt.expectEqual {
-				t.Errorf("Equal(%s, %s); equal %v; expectEqual %v",
+				t.Errorf("Desired(%s, %s); equal %v; expectEqual %v",
 					tt.desiredData, tt.actualData, equal, tt.expectEqual)
 			}
 		})
