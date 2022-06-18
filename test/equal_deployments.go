@@ -1,5 +1,41 @@
 package test
 
+import (
+	"io/ioutil"
+
+	"gopkg.in/yaml.v3"
+)
+
+func StructuredUnorderedDesired() map[interface{}]interface{} {
+	file, err := ioutil.ReadFile("test/yaml/1-unordered-array-1.yaml")
+	if err != nil {
+		panic(err)
+	}
+
+	data := make(map[interface{}]interface{})
+
+	if err := yaml.Unmarshal(file, &data); err != nil {
+		panic(err)
+	}
+
+	return data
+}
+
+func StructuredUnorderedActual() map[interface{}]interface{} {
+	file, err := ioutil.ReadFile("test/yaml/1-unordered-array-2.yaml")
+	if err != nil {
+		panic(err)
+	}
+
+	data := make(map[interface{}]interface{})
+
+	if err := yaml.Unmarshal(file, &data); err != nil {
+		panic(err)
+	}
+
+	return data
+}
+
 func EqualDeploymentDesired() map[string]interface{} {
 	return map[string]interface{}{
 		"apiVersion": "apps/v1",

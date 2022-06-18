@@ -44,7 +44,7 @@ func Test_validateSliceStringComparison(t *testing.T) {
 			name:               "ensure nil comparison fails",
 			desiredSliceString: []string{"one", "two", "three", "four"},
 			actualSliceString:  nil,
-			expectError:        true,
+			expectError:        false,
 			expectEqual:        false,
 		},
 	}
@@ -98,6 +98,13 @@ func Test_validateSliceIntComparison(t *testing.T) {
 			name:            "ensure out of range comparison fails",
 			desiredSliceInt: []interface{}{1, 2, 3, 4},
 			actualSliceInt:  []interface{}{},
+			expectError:     false,
+			expectEqual:     false,
+		},
+		{
+			name:            "ensure nil comparison fails",
+			desiredSliceInt: []interface{}{1, 2, 3, 4},
+			actualSliceInt:  nil,
 			expectError:     false,
 			expectEqual:     false,
 		},
@@ -226,16 +233,50 @@ func TestEqualSliceMapStringInterface(t *testing.T) {
 			want:    true,
 			wantErr: false,
 		},
+		{
+			name: "ensure unordered map passes",
+			args: args{
+				actual: []map[interface{}]interface{}{
+					{
+						"bindings": []map[interface{}]interface{}{
+							{
+								"members": []string{
+									"serviceAccount:service-12345@container-engine-robot.iam.gserviceaccount.com",
+									"serviceAccount:service-12345@compute-system.iam.gserviceaccount.com",
+								},
+								"role": "test",
+							},
+						},
+					},
+				},
+				desired: []map[interface{}]interface{}{
+					{
+						"bindings": []map[interface{}]interface{}{
+							{
+								"role": "test",
+								"members": []string{
+									"serviceAccount:service-12345@compute-system.iam.gserviceaccount.com",
+									"serviceAccount:service-12345@container-engine-robot.iam.gserviceaccount.com",
+								},
+							},
+						},
+					},
+				},
+			},
+			want:    true,
+			wantErr: false,
+		},
 	}
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := EqualSliceMapInterfaceInterface(tt.args.desired, tt.args.actual)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("EqualSliceMapStringInterface() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("EqualSliceMapInterfaceInterface() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 			if got != tt.want {
-				t.Errorf("EqualSliceMapStringInterface() = %v, want %v", got, tt.want)
+				t.Errorf("EqualSliceMapInterfaceInterface() = %v, want %v", got, tt.want)
 			}
 		})
 	}

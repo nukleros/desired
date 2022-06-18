@@ -40,3 +40,41 @@ func Test_validateTypeCompare(t *testing.T) {
 		})
 	}
 }
+
+func Test_compareNil(t *testing.T) {
+	type args struct {
+		desired interface{}
+		actual  interface{}
+	}
+
+	tests := []struct {
+		name string
+		args args
+		want bool
+	}{
+		{
+			name: "ensure actual value with nil returns false",
+			args: args{
+				desired: "hasDesired",
+				actual:  nil,
+			},
+			want: false,
+		},
+		{
+			name: "ensure desired value with nil returns true",
+			args: args{
+				desired: nil,
+				actual:  "hasData",
+			},
+			want: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := compareNil(tt.args.desired, tt.args.actual); got != tt.want {
+				t.Errorf("compareNil() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}

@@ -52,3 +52,36 @@ func Test_equalDeepMapComparison(t *testing.T) {
 		})
 	}
 }
+
+func Test_equalHighlyUnordered(t *testing.T) {
+	tests := []struct {
+		name        string
+		desiredData map[interface{}]interface{}
+		actualData  map[interface{}]interface{}
+		expectError bool
+		expectEqual bool
+	}{
+		{
+			name:        "ensure literal objects are equal",
+			desiredData: testdata.StructuredUnorderedDesired(),
+			actualData:  testdata.StructuredUnorderedDesired(),
+			expectError: false,
+			expectEqual: true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			equal, err := Desired(tt.desiredData, tt.actualData)
+			hasError := err != nil
+			if hasError != tt.expectError {
+				t.Errorf("Desired(%s, %s); hasError %s; expectError %v",
+					tt.desiredData, tt.actualData, err, tt.expectError)
+			}
+
+			if equal != tt.expectEqual {
+				t.Errorf("Desired(%s, %s); equal %v; expectEqual %v",
+					tt.desiredData, tt.actualData, equal, tt.expectEqual)
+			}
+		})
+	}
+}

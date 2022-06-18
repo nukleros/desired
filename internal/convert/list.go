@@ -146,14 +146,14 @@ func ToSliceMapInterfaceInterface(in interface{}) ([]map[interface{}]interface{}
 
 	asList := reflect.ValueOf(in)
 
-	if asList.Kind() != reflect.Slice || asList.Kind() != reflect.Array {
+	if reflect.TypeOf(in).Kind() != reflect.Slice && reflect.TypeOf(in).Kind() != reflect.Array {
 		return nil, fmt.Errorf("%w - expected list but found type %T", ErrConvertSliceMapInterfaceInterface, in)
 	}
 
 	out := make([]map[interface{}]interface{}, asList.Len())
 
 	for i := 0; i < asList.Len(); i++ {
-		asMap, err := ToMapInterfaceInterface(asList.Index(i))
+		asMap, err := ToMapInterfaceInterface(asList.Index(i).Interface())
 		if err != nil {
 			return nil, ErrConvertSliceMapInterfaceInterface
 		}

@@ -10,9 +10,23 @@ import (
 
 // EqualList takes in a list of any type and returns the result of the comparison.
 func EqualList(desiredList, actualList interface{}) (bool, error) {
-	// handle a map type first since ordering is important and potentially unpredictable with maps
 	desiredAsValue := reflect.ValueOf(desiredList)
-	if reflect.ValueOf(desiredAsValue.Index(0)).Kind() == reflect.Map {
+	actualAsValue := reflect.ValueOf(actualList)
+
+	// return equality if desired has no values as the
+	// desired is not explicitly controlling these fields
+	if desiredAsValue.Len() == 0 {
+		return true, nil
+	}
+
+	// return inequality if actual has no values, as we have already
+	// confirmed above that desired expects values
+	if actualAsValue.Len() == 0 {
+		return false, nil
+	}
+
+	// handle a map type first since ordering is important and potentially unpredictable with maps
+	if desiredAsValue.Index(0).Kind() == reflect.Map {
 		return EqualSliceMapInterfaceInterface(desiredList, actualList)
 	}
 
@@ -136,15 +150,7 @@ func EqualSliceBooleanInterface(desiredSlice, actualSlice interface{}) (bool, er
 // EqualSliceIntegerInterface takes in an expected slice of integers type, as an interface, converts
 // it appropriately and returns the result of the comparison.
 func EqualSliceInterface(desiredSlice, actualSlice []interface{}) (bool, error) {
-	// return equality if desired has no values as the
-	// desired is not explicitly controlling these fields
-	if len(desiredSlice) == 0 {
-		return true, nil
-	}
-
-	// return inequality if actual has no values, as we have already
-	// confirmed above that desired expects values
-	if len(actualSlice) == 0 {
+	if passNilComparison := compareNil(desiredSlice, actualSlice); !passNilComparison {
 		return false, nil
 	}
 
