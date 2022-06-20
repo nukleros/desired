@@ -50,7 +50,7 @@ func Test_validateSliceStringComparison(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			equal, err := EqualSliceStringInterface(tt.desiredSliceString, tt.actualSliceString)
+			equal, err := equalSliceStringInterface(tt.desiredSliceString, tt.actualSliceString)
 			hasError := err != nil
 			if hasError != tt.expectError {
 				t.Errorf("EqualSliceString(%s, %s); hasError %s; expectError %v",
@@ -111,7 +111,7 @@ func Test_validateSliceIntComparison(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			equal, err := EqualSliceIntegerInterface(tt.desiredSliceInt, tt.actualSliceInt)
+			equal, err := equalSliceIntegerInterface(tt.desiredSliceInt, tt.actualSliceInt)
 			hasError := err != nil
 			if hasError != tt.expectError {
 				t.Errorf("EqualSliceInt(%s, %s); hasError %s; expectError %v",
@@ -270,7 +270,7 @@ func TestEqualSliceMapStringInterface(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := EqualSliceMapInterfaceInterface(tt.args.desired, tt.args.actual)
+			got, err := equalSliceMapInterfaceInterface(tt.args.desired, tt.args.actual)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("EqualSliceMapInterfaceInterface() error = %v, wantErr %v", err, tt.wantErr)
 				return

@@ -66,7 +66,7 @@ func TestEqualMap(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := EqualMap(tt.args.desired, tt.args.actual)
+			got, err := equalMap(tt.args.desired, tt.args.actual)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("EqualMap() error = %v, wantErr %v", err, tt.wantErr)
 				return

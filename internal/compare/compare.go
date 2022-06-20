@@ -18,21 +18,12 @@ func Compare(desiredValue, actualValue interface{}) (bool, error) {
 	switch reflect.TypeOf(desiredValue).Kind() {
 	// map types
 	case reflect.Map:
-		return EqualMap(desiredValue, actualValue)
+		return equalMap(desiredValue, actualValue)
 	// list types
 	case reflect.Array, reflect.Slice:
-		return EqualList(desiredValue, actualValue)
+		return equalList(desiredValue, actualValue)
 	// other types
 	default:
-
-		var equal bool
-		equal = reflect.DeepEqual(desiredValue, actualValue)
-		if !equal {
-			fmt.Printf("type: %T\n", desiredValue)
-			fmt.Printf("desired: %+v\n", desiredValue)
-			fmt.Printf("actual: %+v\n\n\n\n", actualValue)
-		}
-
 		return reflect.DeepEqual(desiredValue, actualValue), nil
 	}
 }

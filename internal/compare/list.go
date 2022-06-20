@@ -8,8 +8,8 @@ import (
 	"github.com/nukleros/desired/internal/convert"
 )
 
-// EqualList takes in a list of any type and returns the result of the comparison.
-func EqualList(desiredList, actualList interface{}) (bool, error) {
+// equalList takes in a list of any type and returns the result of the comparison.
+func equalList(desiredList, actualList interface{}) (bool, error) {
 	if passNilComparison := compareNil(desiredList, actualList); !passNilComparison {
 		return false, nil
 	}
@@ -31,36 +31,36 @@ func EqualList(desiredList, actualList interface{}) (bool, error) {
 
 	// handle a map type first since ordering is important and potentially unpredictable with maps
 	if desiredAsValue.Index(0).Kind() == reflect.Map {
-		return EqualSliceMapInterfaceInterface(desiredList, actualList)
+		return equalSliceMapInterfaceInterface(desiredList, actualList)
 	}
 
 	switch desiredAsType := desiredList.(type) {
 	case []string:
-		return EqualSliceStringInterface(desiredList, actualList)
+		return equalSliceStringInterface(desiredList, actualList)
 	case []int, []int8, []int16, []int32, []int64:
-		return EqualSliceIntegerInterface(desiredList, actualList)
+		return equalSliceIntegerInterface(desiredList, actualList)
 	case []float32, []float64:
-		return EqualSliceFloatInterface(desiredList, actualList)
+		return equalSliceFloatInterface(desiredList, actualList)
 	case []bool:
-		return EqualSliceBooleanInterface(desiredList, actualList)
+		return equalSliceBooleanInterface(desiredList, actualList)
 	case []interface{}:
-		return EqualSliceInterface(desiredAsType, actualList.([]interface{}))
+		return equalSliceInterface(desiredAsType, actualList.([]interface{}))
 	}
 
 	return false, fmt.Errorf("%w of type %T", ErrInvalidListType, desiredList)
 }
 
-// EqualSliceStringInterface takes in an expected slice of string type, as an interface, converts
+// equalSliceStringInterface takes in an expected slice of string type, as an interface, converts
 // it appropriately and returns the result of the comparison.
-func EqualSliceStringInterface(desiredSlice, actualSlice interface{}) (bool, error) {
+func equalSliceStringInterface(desiredSlice, actualSlice interface{}) (bool, error) {
 	desired, err := convert.ToSliceString(desiredSlice)
 	if err != nil {
-		return false, ErrConvertDesired
+		return false, fmt.Errorf("%w - %s", err, ErrConvertDesired)
 	}
 
 	actual, err := convert.ToSliceString(actualSlice)
 	if err != nil {
-		return false, ErrConvertActual
+		return false, fmt.Errorf("%w - %s", err, ErrConvertActual)
 	}
 
 	if len(desired) != len(actual) {
@@ -74,17 +74,17 @@ func EqualSliceStringInterface(desiredSlice, actualSlice interface{}) (bool, err
 	return reflect.DeepEqual(desired, actual), nil
 }
 
-// EqualSliceIntegerInterface takes in an expected slice of integers type, as an interface, converts
+// equalSliceIntegerInterface takes in an expected slice of integers type, as an interface, converts
 // it appropriately and returns the result of the comparison.
-func EqualSliceIntegerInterface(desiredSlice, actualSlice interface{}) (bool, error) {
+func equalSliceIntegerInterface(desiredSlice, actualSlice interface{}) (bool, error) {
 	desired, err := convert.ToSliceInteger(desiredSlice)
 	if err != nil {
-		return false, ErrConvertDesired
+		return false, fmt.Errorf("%w - %s", err, ErrConvertDesired)
 	}
 
 	actual, err := convert.ToSliceInteger(actualSlice)
 	if err != nil {
-		return false, ErrConvertActual
+		return false, fmt.Errorf("%w - %s", err, ErrConvertActual)
 	}
 
 	if len(desired) != len(actual) {
@@ -98,17 +98,17 @@ func EqualSliceIntegerInterface(desiredSlice, actualSlice interface{}) (bool, er
 	return reflect.DeepEqual(desired, actual), nil
 }
 
-// EqualSliceFloatInterface takes in an expected slice of floats type, as an interface, converts
+// equalSliceFloatInterface takes in an expected slice of floats type, as an interface, converts
 // it appropriately and returns the result of the comparison.
-func EqualSliceFloatInterface(desiredSlice, actualSlice interface{}) (bool, error) {
+func equalSliceFloatInterface(desiredSlice, actualSlice interface{}) (bool, error) {
 	desired, err := convert.ToSliceFloat(desiredSlice)
 	if err != nil {
-		return false, ErrConvertDesired
+		return false, fmt.Errorf("%w - %s", err, ErrConvertDesired)
 	}
 
 	actual, err := convert.ToSliceFloat(actualSlice)
 	if err != nil {
-		return false, ErrConvertActual
+		return false, fmt.Errorf("%w - %s", err, ErrConvertActual)
 	}
 
 	if len(desired) != len(actual) {
@@ -122,17 +122,17 @@ func EqualSliceFloatInterface(desiredSlice, actualSlice interface{}) (bool, erro
 	return reflect.DeepEqual(desired, actual), nil
 }
 
-// EqualSliceBooleanInterface takes in an expected slice of bools type, as an interface, converts
+// equalSliceBooleanInterface takes in an expected slice of bools type, as an interface, converts
 // it appropriately and returns the result of the comparison.
-func EqualSliceBooleanInterface(desiredSlice, actualSlice interface{}) (bool, error) {
+func equalSliceBooleanInterface(desiredSlice, actualSlice interface{}) (bool, error) {
 	desired, err := convert.ToSliceBoolean(desiredSlice)
 	if err != nil {
-		return false, ErrConvertDesired
+		return false, fmt.Errorf("%w - %s", err, ErrConvertDesired)
 	}
 
 	actual, err := convert.ToSliceBoolean(actualSlice)
 	if err != nil {
-		return false, ErrConvertActual
+		return false, fmt.Errorf("%w - %s", err, ErrConvertActual)
 	}
 
 	if len(desired) != len(actual) {
@@ -153,7 +153,7 @@ func EqualSliceBooleanInterface(desiredSlice, actualSlice interface{}) (bool, er
 
 // EqualSliceIntegerInterface takes in an expected slice of integers type, as an interface, converts
 // it appropriately and returns the result of the comparison.
-func EqualSliceInterface(desiredSlice, actualSlice []interface{}) (bool, error) {
+func equalSliceInterface(desiredSlice, actualSlice []interface{}) (bool, error) {
 	for i := range desiredSlice {
 		equal, err := Compare(desiredSlice[i], actualSlice[i])
 		if !equal || err != nil {
@@ -164,24 +164,24 @@ func EqualSliceInterface(desiredSlice, actualSlice []interface{}) (bool, error) 
 	return true, nil
 }
 
-// EqualSliceMapInterfaceInterface takes in an expected slice of map interface to interface type
+// equalSliceMapInterfaceInterface takes in an expected slice of map interface to interface type
 // returns the result of the comparison.
-func EqualSliceMapInterfaceInterface(desiredSlice, actualSlice interface{}) (bool, error) {
+func equalSliceMapInterfaceInterface(desiredSlice, actualSlice interface{}) (bool, error) {
 	desired, err := convert.ToSliceMapInterfaceInterface(desiredSlice)
 	if err != nil {
-		return false, ErrConvertDesired
+		return false, fmt.Errorf("%w - %s", err, ErrConvertDesired)
 	}
 
 	actual, err := convert.ToSliceMapInterfaceInterface(actualSlice)
 	if err != nil {
-		return false, ErrConvertActual
+		return false, fmt.Errorf("%w - %s", err, ErrConvertActual)
 	}
 
 	for i := range desired {
 		var hasEqual bool
 
 		for j := range actual {
-			equal, err := EqualMap(desired[i], actual[j])
+			equal, err := equalMap(desired[i], actual[j])
 			if err != nil {
 				return false, err
 			}

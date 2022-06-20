@@ -6,8 +6,8 @@ import (
 	"github.com/nukleros/desired/internal/convert"
 )
 
-// EqualMap ensures any map type is equal.
-func EqualMap(desired, actual interface{}) (bool, error) {
+// equalMap ensures any map type is equal.
+func equalMap(desired, actual interface{}) (bool, error) {
 	desiredMap, err := convert.ToMapInterfaceInterface(desired)
 	if err != nil {
 		return false, ErrConvertDesired
