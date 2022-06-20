@@ -4,7 +4,98 @@ import (
 	"testing"
 )
 
-func Test_validateSliceStringComparison(t *testing.T) {
+func Test_equalList(t *testing.T) {
+	t.Parallel()
+
+	uncomparable := func() bool {
+		return true
+	}
+
+	type args struct {
+		desiredList interface{}
+		actualList  interface{}
+	}
+	tests := []struct {
+		name    string
+		args    args
+		want    bool
+		wantErr bool
+	}{
+		{
+			name: "ensure equal lists of same length with same values are equal",
+			args: args{
+				desiredList: []int{1, 2, 3},
+				actualList:  []int{3, 2, 1},
+			},
+			want:    true,
+			wantErr: false,
+		},
+		{
+			name: "ensure lists of different length are inequal",
+			args: args{
+				desiredList: []string{"one"},
+				actualList:  []string{"one", "two"},
+			},
+			want:    true,
+			wantErr: false,
+		},
+		{
+			name: "ensure list of floats are equal",
+			args: args{
+				desiredList: []float64{3.14, 5.67, 8.910},
+				actualList:  []float64{5.67, 8.910, 3.14},
+			},
+			want:    true,
+			wantErr: false,
+		},
+		{
+			name: "ensure list of bools are equal",
+			args: args{
+				desiredList: []bool{true, true, false, false},
+				actualList:  []bool{false, false, true, true},
+			},
+			want:    true,
+			wantErr: false,
+		},
+		{
+			name: "ensure list of bools are inequal",
+			args: args{
+				desiredList: []bool{true, true, true, false},
+				actualList:  []bool{false, false, true, true},
+			},
+			want:    false,
+			wantErr: false,
+		},
+		{
+			name: "ensure uncomparable item return an error",
+			args: args{
+				desiredList: []func() bool{uncomparable},
+				actualList:  []func() bool{uncomparable},
+			},
+			want:    false,
+			wantErr: true,
+		},
+	}
+
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			got, err := equalList(tt.args.desiredList, tt.args.actualList)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("equalList() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if got != tt.want {
+				t.Errorf("equalList() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func Test_equalSliceStringInterface(t *testing.T) {
+	t.Parallel()
+
 	tests := []struct {
 		name               string
 		desiredSliceString []string
@@ -34,9 +125,16 @@ func Test_validateSliceStringComparison(t *testing.T) {
 			expectEqual:        false,
 		},
 		{
-			name:               "ensure out of range comparison fails",
+			name:               "ensure out of range actual comparison fails",
 			desiredSliceString: []string{"one", "two", "three", "four"},
 			actualSliceString:  []string{},
+			expectError:        false,
+			expectEqual:        false,
+		},
+		{
+			name:               "ensure out of range desired comparison fails",
+			desiredSliceString: []string{},
+			actualSliceString:  []string{"one"},
 			expectError:        false,
 			expectEqual:        false,
 		},
@@ -48,17 +146,20 @@ func Test_validateSliceStringComparison(t *testing.T) {
 			expectEqual:        false,
 		},
 	}
+
 	for _, tt := range tests {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			equal, err := equalSliceStringInterface(tt.desiredSliceString, tt.actualSliceString)
 			hasError := err != nil
 			if hasError != tt.expectError {
-				t.Errorf("EqualSliceString(%s, %s); hasError %s; expectError %v",
+				t.Errorf("equalSliceStringInterface(%s, %s); hasError %s; expectError %v",
 					tt.desiredSliceString, tt.actualSliceString, err, tt.expectError)
 			}
 
 			if equal != tt.expectEqual {
-				t.Errorf("EqualSliceString(%s, %s); equal %v; expectEqual %v",
+				t.Errorf("equalSliceStringInterface(%s, %s); equal %v; expectEqual %v",
 					tt.desiredSliceString, tt.actualSliceString, equal, tt.expectEqual)
 			}
 		})
