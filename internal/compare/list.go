@@ -10,23 +10,12 @@ import (
 
 // equalList takes in a list of any type and returns the result of the comparison.
 func equalList(desiredList, actualList interface{}) (bool, error) {
-	if passNilComparison := compareNil(desiredList, actualList); !passNilComparison {
-		return false, nil
-	}
-
 	desiredAsValue := reflect.ValueOf(desiredList)
 	actualAsValue := reflect.ValueOf(actualList)
 
-	// return equality if desired has no values as the
-	// desired is not explicitly controlling these fields
-	if desiredAsValue.Len() == 0 {
+	// return equality if length of both lists are not the same
+	if desiredAsValue.Len() != actualAsValue.Len() {
 		return true, nil
-	}
-
-	// return inequality if actual has no values, as we have already
-	// confirmed above that desired expects values
-	if actualAsValue.Len() == 0 {
-		return false, nil
 	}
 
 	// handle a map type first since ordering is important and potentially unpredictable with maps

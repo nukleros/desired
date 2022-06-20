@@ -6,13 +6,26 @@ import (
 )
 
 func Compare(desiredValue, actualValue interface{}) (bool, error) {
+	// if the desired value is nil but the actual value has a value, return a false comparison
+	// immediately.  this is the special case to ensuring that types are equal and ensures that
+	// if a consumer requests a nil desired object, that the object is in deed nil. alternatively,
+	// if the desired value is not nil, but the actual value is nil, return false immediately,
+	// otherwise continue processing.
+	if isNil(desiredValue) {
+		if isNil(actualValue) {
+			return true, nil
+		}
 
-	if passNilComparison := compareNil(desiredValue, actualValue); !passNilComparison {
 		return false, nil
+	} else {
+		if isNil(actualValue) {
+			return false, nil
+		}
 	}
 
+	// ensure that we are attempting to compare equal types, otherwise return an error.
 	if !equalTypes(desiredValue, actualValue) {
-		return false, fmt.Errorf("%w\n\ndesired: %+T\n\nactual: %+T", ErrMismatchedTypes, desiredValue, actualValue)
+		return false, fmt.Errorf("%w - desired: [%+T], actual: [%+T]", ErrMismatchedTypes, desiredValue, actualValue)
 	}
 
 	switch reflect.TypeOf(desiredValue).Kind() {
@@ -32,13 +45,6 @@ func equalTypes(desired, actual interface{}) bool {
 	return reflect.TypeOf(desired) == reflect.TypeOf(actual)
 }
 
-func compareNil(desired, actual interface{}) bool {
-	// treat a nil desired value as a value that is not checked for a desirable condition
-	if desired == nil {
-		return true
-	}
-
-	// if the actual value is nil, we are not in a desired state since we have already confirmed
-	// above that the desired value is not nil
-	return actual != nil
+func isNil(value interface{}) bool {
+	return fmt.Sprintf("%T", value) == "<nil>"
 }
