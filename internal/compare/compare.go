@@ -12,10 +12,10 @@ func Compare(desiredValue, actualValue interface{}) (bool, error) {
 	}
 
 	if !equalTypes(desiredValue, actualValue) {
-		return false, fmt.Errorf("%w\n\ndesired: %+v\n\nactual: %+v", ErrMismatchedTypes, desiredValue, actualValue)
+		return false, fmt.Errorf("%w\n\ndesired: %+T\n\nactual: %+T", ErrMismatchedTypes, desiredValue, actualValue)
 	}
 
-	switch reflect.ValueOf(desiredValue).Kind() {
+	switch reflect.TypeOf(desiredValue).Kind() {
 	// map types
 	case reflect.Map:
 		return EqualMap(desiredValue, actualValue)

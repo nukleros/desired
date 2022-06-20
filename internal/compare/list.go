@@ -10,6 +10,10 @@ import (
 
 // EqualList takes in a list of any type and returns the result of the comparison.
 func EqualList(desiredList, actualList interface{}) (bool, error) {
+	if passNilComparison := compareNil(desiredList, actualList); !passNilComparison {
+		return false, nil
+	}
+
 	desiredAsValue := reflect.ValueOf(desiredList)
 	actualAsValue := reflect.ValueOf(actualList)
 
@@ -150,16 +154,10 @@ func EqualSliceBooleanInterface(desiredSlice, actualSlice interface{}) (bool, er
 // EqualSliceIntegerInterface takes in an expected slice of integers type, as an interface, converts
 // it appropriately and returns the result of the comparison.
 func EqualSliceInterface(desiredSlice, actualSlice []interface{}) (bool, error) {
-	if passNilComparison := compareNil(desiredSlice, actualSlice); !passNilComparison {
-		return false, nil
-	}
-
 	for i := range desiredSlice {
-		for j := range actualSlice {
-			equal, err := Compare(desiredSlice[i], actualSlice[j])
-			if !equal || err != nil {
-				return false, err
-			}
+		equal, err := Compare(desiredSlice[i], actualSlice[i])
+		if !equal || err != nil {
+			return false, err
 		}
 	}
 
