@@ -36,6 +36,15 @@ func Test_equalList(t *testing.T) {
 				desiredList: []string{"one"},
 				actualList:  []string{"one", "two"},
 			},
+			want:    false,
+			wantErr: false,
+		},
+		{
+			name: "ensure empty lists are equal",
+			args: args{
+				desiredList: []string{},
+				actualList:  []string{},
+			},
 			want:    true,
 			wantErr: false,
 		},

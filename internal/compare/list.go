@@ -15,6 +15,12 @@ func equalList(desiredList, actualList interface{}) (bool, error) {
 
 	// return equality if length of both lists are not the same
 	if desiredAsValue.Len() != actualAsValue.Len() {
+		return false, nil
+	}
+
+	// return equality if length of both lists are zero.  this is to avoid a panic error
+	// when attempting to index zero and find the kind in the next condition.
+	if desiredAsValue.Len() == 0 && actualAsValue.Len() == 0 {
 		return true, nil
 	}
 
